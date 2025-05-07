@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bookstore - Buy or Add to Cart</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+    .search-sort-bar {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .book-table th, .book-table td {
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2 class="text-center mb-4">Bookstore Inventory</h2>
+
+  <div class="search-sort-bar">
+    <input type="text" id="searchInput" class="form-control w-50" placeholder="Search books...">
+    <select id="sortSelect" class="form-select w-25">
+      <option value="title">Sort by Title</option>
+      <option value="author">Sort by Author</option>
+      <option value="year">Sort by Year</option>
+      <option value="price">Sort by Price</option>
+    </select>
+    <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
+  </div>
+
+  <table class="table table-bordered book-table">
+    <thead class="table-light">
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Year</th>
+        <th>Genre</th>
+        <th>Price (₱)</th>
+        <th>Quantity</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="bookList">
+      <!-- Book items will be rendered here dynamically -->
+    </tbody>
+  </table>
+</div>
+
+<script>
+const books = [
+  {
+    title: "The Great Gatsby",
+    author: "F. Scott Fitzgerald",
+    year: 1925,
+    genre: "Fiction",
+    price: 400,
+    stock: 10
+  },
+  {
+    title: "1984",
+    author: "George Orwell",
+    year: 1949,
+    genre: "Dystopian",
+    price: 350,
+    stock: 8
+  },
+  {
+    title: "To Kill a Mockingbird",
+    author: "Harper Lee",
+    year: 1960,
+    genre: "Fiction",
+    price: 500,
+    stock: 5
+  },
+  {
+    title: "Pride and Prejudice",
+    author: "Jane Austen",
+    year: 1813,
+    genre: "Romance",
+    price: 450,
+    stock: 6
+  },
+  {
+    title: "The Catcher in the Rye",
+    author: "J.D. Salinger",
+    year: 1951,
+    genre: "Fiction",
+    price: 600,
+    stock: 12
+  },
+  {
+    title: "Moby Dick",
+    author: "Herman Melville",
+    year: 1851,
+    genre: "Adventure",
+    price: 550,
+    stock: 4
+  },
+  {
+    title: "The Hobbit",
+    author: "J.R.R. Tolkien",
+    year: 1937,
+    genre: "Fantasy",
+    price: 700,
+    stock: 7
+  },
+  {
+    title: "War and Peace",
+    author: "Leo Tolstoy",
+    year: 1869,
+    genre: "Historical Fiction",
+    price: 800,
+    stock: 9
+  },
+  {
+    title: "Brave New World",
+    author: "Aldous Huxley",
+    year: 1932,
+    genre: "Dystopian",
+    price: 750,
+    stock: 10
+  },
+  {
+    title: "Crime and Punishment",
+    author: "Fyodor Dostoevsky",
+    year: 1866,
+    genre: "Psychological Fiction",
+    price: 850,
+    stock: 6
+  }
+];
+
+function renderBooks(filter = "", sortBy = "title") {
+  const tbody = document.getElementById("bookList");
+  tbody.innerHTML = "";
+
+  const filteredBooks = books
+    .filter(b => b.title.toLowerCase().includes(filter.toLowerCase()) || b.author.toLowerCase().includes(filter.toLowerCase()))
+    .sort((a, b) => {
+      if (sortBy === "title" || sortBy === "author" || sortBy === "genre") {
+        return a[sortBy].localeCompare(b[sortBy]);
+      } else {
+        return a[sortBy] - b[sortBy];
+      }
+    });
+
+  filteredBooks.forEach((book, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${book.title}</td>
+      <td>${book.author}</td>
+      <td>${book.year}</td>
+      <td>${book.genre}</td>
+      <td>₱${book.price}</td>
+      <td>
+        <input type="number" id="qty${index}" value="1" min="1" max="${book.stock}" class="form-control">
+      </td>
+      <td>
+        <button class="btn btn-success btn-sm me-2" onclick="addToCart(${index})">Add to Cart</button>
+        <button class="btn btn-primary btn-sm" onclick="buyBook(${index})">Buy Now</button>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+function addToCart(index) {
+  const qty = parseInt(document.getElementById(`qty${index}`).value);
+  alert(`${qty} copy/copies of "${books[index].title}" added to cart.`);
+}
+
+function buyBook(index) {
+  const qtyInput = document.getElementById(`qty${index}`);
+  const qty = parseInt(qtyInput.value);
+  if (qty <= books[index].stock) {
+    books[index].stock -= qty;
+    alert(`Successfully bought ${qty} copy/copies of "${books[index].title}".`);
+    renderBooks(document.getElementById("searchInput").value, document.getElementById("sortSelect").value);
+  } else {
+    alert("Not enough stock available.");
+  }
+}
+
+document.getElementById("searchInput").addEventListener("input", () => {
+  renderBooks(document.getElementById("searchInput").value, document.getElementById("sortSelect").value);
+});
+document.getElementById("sortSelect").addEventListener("change", () => {
+  renderBooks(document.getElementById("searchInput").value, document.getElementById("sortSelect").value);
+});
+
+renderBooks();
+</script>
+
+</body>
+</html>

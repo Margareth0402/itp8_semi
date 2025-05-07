@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Library Showcase</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #f8f9fa;
+      padding: 40px;
+    }
+    .book-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      height: 100%;
+    }
+    .book-card img {
+      height: 300px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .book-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+    .book-author, .book-year, .book-genre {
+      font-size: 14px;
+      color: #555;
+    }
+    .book-summary {
+      font-size: 14px;
+      color: #333;
+    }
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Back Button -->
+  <div class="text-start mb-3">
+    <a href="{% url 'home' %}" class="btn btn-outline-secondary">&larr; Back to Homepage</a>
+  </div>
+
+  <!-- Title -->
+  <h2 class="text-center mb-4">Library Showcase</h2>
+
+  <!-- Filters -->
+  <div class="filter-bar">
+    <input type="text" id="searchInput" class="form-control w-25" placeholder="Search by title or author...">
+    
+    <select id="sortSelect" class="form-select w-25">
+      <option value="">Sort By</option>
+      <option value="title-asc">Title (A-Z)</option>
+      <option value="title-desc">Title (Z-A)</option>
+      <option value="author-asc">Author (A-Z)</option>
+      <option value="author-desc">Author (Z-A)</option>
+      <option value="year-asc">Year (Ascending)</option>
+      <option value="year-desc">Year (Descending)</option>
+    </select>
+
+    <select id="genreFilter" class="form-select w-25">
+      <option value="">Filter by Genre</option>
+      <option value="Classic">Classic</option>
+      <option value="Dystopian">Dystopian</option>
+      <option value="Historical">Historical</option>
+      <option value="Romance">Romance</option>
+      <option value="Adventure">Adventure</option>
+      <option value="Philosophical">Philosophical</option>
+    </select>
+  </div>
+
+  <!-- Book List -->
+  <div class="row g-4" id="bookList">
+    <!-- Book Cards -->
+    <!-- Each card has data attributes for sorting/filtering -->
+    <!-- Sample Book -->
+    <!-- Repeat similar structure for 10 books -->
+
+    <!-- Example Book -->
+    <script>
+      const booksData = [
+        {
+          title: "The Great Gatsby",
+          author: "F. Scott Fitzgerald",
+          year: 1925,
+          genre: "Classic",
+          summary: "Set in the Roaring Twenties, the novel explores themes of wealth, love, and the American Dream through the mysterious millionaire Jay Gatsby.",
+          image: "https://via.placeholder.com/200x300?text=Gatsby"
+        },
+        {
+          title: "1984",
+          author: "George Orwell",
+          year: 1949,
+          genre: "Dystopian",
+          summary: "A chilling vision of a totalitarian future where the government watches every move and independent thought is a crime.",
+          image: "https://via.placeholder.com/200x300?text=1984"
+        },
+        {
+          title: "To Kill a Mockingbird",
+          author: "Harper Lee",
+          year: 1960,
+          genre: "Historical",
+          summary: "A young girl in the Deep South learns about justice and prejudice during her father's defense of a Black man falsely accused.",
+          image: "https://via.placeholder.com/200x300?text=Mockingbird"
+        },
+        {
+          title: "Pride and Prejudice",
+          author: "Jane Austen",
+          year: 1813,
+          genre: "Romance",
+          summary: "Elizabeth Bennet navigates issues of class, marriage, and morality in 19th-century England.",
+          image: "https://via.placeholder.com/200x300?text=Pride+Prejudice"
+        },
+        {
+          title: "The Catcher in the Rye",
+          author: "J.D. Salinger",
+          year: 1951,
+          genre: "Classic",
+          summary: "Holden Caulfield recounts his days wandering New York City, questioning the world of 'phoniness'.",
+          image: "https://via.placeholder.com/200x300?text=Catcher"
+        },
+        {
+          title: "Moby Dick",
+          author: "Herman Melville",
+          year: 1851,
+          genre: "Adventure",
+          summary: "Captain Ahab’s obsessive hunt for the white whale is a tale of obsession, revenge, and man's struggle against nature.",
+          image: "https://via.placeholder.com/200x300?text=Moby+Dick"
+        },
+        {
+          title: "The Hobbit",
+          author: "J.R.R. Tolkien",
+          year: 1937,
+          genre: "Adventure",
+          summary: "Bilbo Baggins joins a group of dwarves on a perilous quest to reclaim treasure from a dragon.",
+          image: "https://via.placeholder.com/200x300?text=Hobbit"
+        },
+        {
+          title: "War and Peace",
+          author: "Leo Tolstoy",
+          year: 1869,
+          genre: "Historical",
+          summary: "A vast panorama of Russian society during the Napoleonic Wars, blending personal drama and historical events.",
+          image: "https://via.placeholder.com/200x300?text=War+Peace"
+        },
+        {
+          title: "Brave New World",
+          author: "Aldous Huxley",
+          year: 1932,
+          genre: "Dystopian",
+          summary: "A futuristic society driven by pleasure and control, where human individuality is suppressed for social stability.",
+          image: "https://via.placeholder.com/200x300?text=Brave+New+World"
+        },
+        {
+          title: "Crime and Punishment",
+          author: "Fyodor Dostoevsky",
+          year: 1866,
+          genre: "Philosophical",
+          summary: "A psychological exploration of guilt and redemption after a destitute student commits a murder.",
+          image: "https://via.placeholder.com/200x300?text=Crime+Punishment"
+        }
+      ];
+
+      function renderBooks(data) {
+        const container = document.getElementById('bookList');
+        container.innerHTML = '';
+        data.forEach(book => {
+          const col = document.createElement('div');
+          col.className = "col-md-6 col-lg-4 book-item";
+          col.setAttribute('data-title', book.title.toLowerCase());
+          col.setAttribute('data-author', book.author.toLowerCase());
+          col.setAttribute('data-year', book.year);
+          col.setAttribute('data-genre', book.genre.toLowerCase());
+
+          col.innerHTML = `
+            <div class="book-card">
+              <img src="${book.image}" class="img-fluid mb-3" alt="${book.title}">
+              <div class="book-title">${book.title}</div>
+              <div class="book-author"><strong>Author:</strong> ${book.author}</div>
+              <div class="book-year"><strong>Year:</strong> ${book.year}</div>
+              <div class="book-genre"><strong>Genre:</strong> ${book.genre}</div>
+              <p class="book-summary mt-2"><strong>Summary:</strong> ${book.summary}</p>
+            </div>
+          `;
+          container.appendChild(col);
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        renderBooks(booksData);
+
+        document.getElementById('searchInput').addEventListener('input', e => {
+          const term = e.target.value.toLowerCase();
+          document.querySelectorAll('.book-item').forEach(book => {
+            const matches = book.dataset.title.includes(term) || book.dataset.author.includes(term);
+            book.style.display = matches ? 'block' : 'none';
+          });
+        });
+
+        document.getElementById('sortSelect').addEventListener('change', e => {
+          const val = e.target.value;
+          const sorted = [...booksData];
+
+          if (val === 'title-asc') sorted.sort((a, b) => a.title.localeCompare(b.title));
+          if (val === 'title-desc') sorted.sort((a, b) => b.title.localeCompare(a.title));
+          if (val === 'author-asc') sorted.sort((a, b) => a.author.localeCompare(b.author));
+          if (val === 'author-desc') sorted.sort((a, b) => b.author.localeCompare(a.author));
+          if (val === 'year-asc') sorted.sort((a, b) => a.year - b.year);
+          if (val === 'year-desc') sorted.sort((a, b) => b.year - a.year);
+
+          renderBooks(sorted);
+        });
+
+        document.getElementById('genreFilter').addEventListener('change', e => {
+          const genre = e.target.value.toLowerCase();
+          document.querySelectorAll('.book-item').forEach(book => {
+            book.style.display = !genre || book.dataset.genre === genre ? 'block' : 'none';
+          });
+        });
+      });
+    </script>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
