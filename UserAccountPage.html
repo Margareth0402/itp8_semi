@@ -45,10 +45,21 @@
 
 <div class="container py-5">
 
-<!-- Theme Toggle Button -->
-<button class="btn btn-outline-secondary toggle-btn" onclick="location.href='{% url 'toggle_theme' %}'" id="themeToggle" aria-label="Toggle Theme">
-  <i class="bi {% if theme == 'dark' %}bi-sun-fill{% else %}bi-moon-fill{% endif %}"></i>
-</button>
+<!-- Top Right Controls: Theme Toggle + Logout -->
+<div class="d-flex justify-content-end gap-2 position-absolute top-0 end-0 m-4">
+  <!-- Theme Toggle Button -->
+  <button class="btn btn-outline-secondary" onclick="location.href='{% url 'toggle_theme' %}'" id="themeToggle" aria-label="Toggle Theme">
+    <i class="bi {% if theme == 'dark' %}bi-sun-fill{% else %}bi-moon-fill{% endif %}"></i>
+  </button>
+
+  <!-- Logout Button -->
+  <form action="{% url 'logout' %}" method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger" aria-label="Logout">Logout</button>
+  </form>
+  
+</div>
+
 
 <!-- User Profile and Payment Method Setup -->
 <div class="card p-4 dashboard-section">
